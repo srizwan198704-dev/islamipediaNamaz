@@ -1,0 +1,31 @@
+name: Auto Update Prayer Times API
+
+on:
+  schedule:
+    # বাংলাদেশ সময় প্রতিদিন সন্ধ্যা ৬টা (UTC 12:00 PM)
+    - cron: '0 12 * * *'
+    # বাংলাদেশ সময় প্রতিদিন রাত ১২টা (UTC 6:00 PM)
+    - cron: '0 18 * * *'
+  workflow_dispatch: # যেন আপনি যেকোনো সময় গিটহাব থেকে ম্যানুয়ালি রান করতে পারেন
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Run Scraper Script
+      run: python scraper.py
+
+    - name: Commit and Push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Auto Update Prayer Times: $(date)" && git push)
