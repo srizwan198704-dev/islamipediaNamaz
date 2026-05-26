@@ -2,6 +2,7 @@
 import urllib.request
 import json
 import os
+import time
 from html.parser import HTMLParser
 
 class TextExtractor(HTMLParser):
@@ -44,11 +45,13 @@ class TextExtractor(HTMLParser):
                 self.counter += 1
 
 def fetch_prayer_times(country_code, city_name):
-    url = f"https://muslimbangla.com/world/{country_code}/prayer-times-{city_name}"
+    # ইউআরএল-এর স্পেস বা ফরম্যাট ঠিক করার জন্য (যেমন: Cox's Bazar বা New York)
+    formatted_city = city_name.lower().replace(" ", "%20")
+    url = f"https://muslimbangla.com/world/{country_code}/prayer-times-{formatted_city}"
     req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
     
     try:
-        with urllib.request.urlopen(req) as response:
+        with urllib.request.urlopen(req, timeout=10) as response:
             html = response.read().decode('utf-8')
         
         parser = TextExtractor()
@@ -59,14 +62,34 @@ def fetch_prayer_times(country_code, city_name):
         return None
 
 if __name__ == "__main__":
-    # এখানে আপনি যত খুশি দেশ ও শহরের নাম যুক্ত করতে পারবেন (সঠিক URL ফরম্যাট অনুযায়ী)
-    locations = [
-        {"country": "BD", "city": "Dhaka"},
+    locations = []
+
+    # ১. drs.json ফাইল থেকে বাংলাদেশের সব ডিস্ট্রিক্টের নাম রিড করা
+    json_file_name = "drs.json"
+    if os.path.exists(json_file_name):
+        try:
+            with open(json_file_name, "r", encoding="utf-8") as f:
+                districts = json.load(f)
+                for dist in districts:
+                    if "name" in dist and dist["name"]:
+                        locations.append({"country": "BD", "city": dist["name"]})
+            print(f"সফলভাবে {json_file_name} থেকে {len(districts)}টি জেলার নাম লোড করা হয়েছে।")
+        except Exception as e:
+            print(f"{json_file_name} ফাইলটি পড়তে সমস্যা হয়েছে: {e}")
+    else:
+        print(f"সতর্কতা: {json_file_name} ফাইলটি পাওয়া যায়নি! ডিফল্ট ব্যাকআপ লিস্ট ব্যবহার করা হচ্ছে।")
+        # ফাইলটি কোনো কারণে মিস হলে ব্যাকআপ হিসেবে ঢাকা ও মক্কা রানিং রাখার জন্য:
+        locations.append({"country": "BD", "city": "Dhaka"})
+
+    # ২. অন্যান্য আন্তর্জাতিক প্রধান শহরসমূহ (ইচ্ছা হলে এখানে আরও বাড়াতে পারেন)
+    other_locations = [
         {"country": "SA", "city": "Makkah"},
         {"country": "SA", "city": "Madinah"},
-        {"country": "BE", "city": "Brussels"} # উদাহরণস্বরূপ দেওয়া হলো
+        {"country": "BE", "city": "Brussels"}
     ]
+    locations.extend(other_locations)
 
+    # ৩. লুপ চালিয়ে সব ডেটা স্ক্র্যাপ এবং সেভ করা
     for loc in locations:
         country = loc["country"]
         city = loc["city"]
@@ -74,14 +97,16 @@ if __name__ == "__main__":
         print(f"Processing: {country}/{city}...")
         data = fetch_prayer_times(country, city)
         
-        if data:
-            # কান্ট্রি কোড অনুযায়ী ফোল্ডার তৈরি করা (যেমন: BD/, SA/)
+        if data and len(data) > 0:
             os.makedirs(country, exist_ok=True)
             
-            # শহরের নাম অনুযায়ী ফাইল তৈরি করা (যেমন: BD/Dhaka.json)
-            file_path = os.path.join(country, f"{city}.json")
+            # ফাইলের নাম ছোট হাতের অক্ষরে সেভ হবে (যেমন: BD/dhaka.json)
+            file_path = os.path.join(country, f"{city.lower()}.json")
             
             with open(file_path, "w", encoding="utf-8") as json_file:
                 json.dump(data, json_file, ensure_ascii=False, indent=4)
+            
+            # গিটহাব ও সার্ভার সেফটির জন্য ছোট বিরতি
+            time.sleep(0.5)
                 
-    print("সব দেশের ডেটা সফলভাবে আপডেট হয়েছে!")
+    print("সব দেশ ও জেলার ডেটা সফলভাবে আপডেট হয়েছে!")
