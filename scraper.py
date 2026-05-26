@@ -22,56 +22,51 @@ class DynamicTextExtractor(HTMLParser):
                 self.raw_texts.append(text)
 
     def extract_with_sample_structure(self):
-        # পেজ থেকে সংগ্রহ করা সমস্ত টেক্সটের একটি কপি
         texts = self.raw_texts
         extracted_list = []
         
-        # ১. হিজরি তারিখ খুঁজে বের করা (যা আপনার স্যাম্পলে "12+13" পজিশনে ছিল)
+        # ১. হিজরি তারিখ খুঁজে বের করা
         hijri_index = -1
         for idx, t in enumerate(texts):
             if "হিজরি" in t or "হিজরীর" in t:
                 hijri_index = idx
                 break
         
-        # হিজরি তারিখের আগের অংশ (যেমন: ৯ যিলহজ্ব, ১৪৪৭) এবং "হিজরি" শব্দটা জোড়া দেওয়া
         if hijri_index != -1 and hijri_index > 0:
             combined_hijri = f"{texts[hijri_index-1]} {texts[hijri_index]}".strip()
-            extracted_list.append({"12+13": combined_hijri})
+            extracted_list.append({"hijri_date": combined_hijri})
             
-            # ২. বাংলা তারিখ খুঁজে বের করা (যা হিজরির ঠিক ২ পজিশন পরে থাকে - "15" নম্বর পজিশন)
+            # ২. বাংলা তারিখ খুঁজে বের করা
             bangla_idx = hijri_index + 2
             if bangla_idx < len(texts) and "বঙ্গাব্দ" in texts[bangla_idx]:
-                extracted_list.append({"15": texts[bangla_idx]})
+                extracted_list.append({"bangla_date": texts[bangla_idx]})
 
-        # ৩. নামাযের ওয়াক্ত এবং নিষিদ্ধ সময়সূচী ট্র্যাক করা (যা আপনার স্যাম্পলের মূল কাঠামো)
-        # আপনার স্যাম্পল অনুযায়ী যে ওয়াক্তগুলোর নাম এবং তাদের নির্দিষ্ট পজিশন দরকার:
+        # ৩. ফরজ ওয়াক্ত এবং প্রধান সময়সূচী ট্র্যাক করা (অর্থবহ Text Key সহ)
         prayer_targets = [
-            {"name": "ফজর", "pos_key": "24", "time_key": "25"},
-            {"name": "যুহর", "pos_key": "26", "time_key": "27"},
-            {"name": "আসর", "pos_key": "28", "time_key": "30"}, # আসরের পর 'বর্তমান' স্কিপ করে সরাসরি সময়
-            {"name": "মাগরিব", "pos_key": "31", "time_key": "32"}, # আপনার স্যাম্পল অনুযায়ী মাগরিব ৩১
-            {"name": "ইশা", "pos_key": "33", "time_key": "34"},   # ইশা ৩৩ এবং তার সময় ৩৪ (মাঝের 'বর্তমান' স্কিপড)
-            {"name": "সূর্যোদয়", "pos_key": "36", "time_key": "37"},
-            {"name": "দুপুর", "pos_key": "38", "time_key": "39"},
-            {"name": "সূর্যাস্ত", "pos_key": "40", "time_key": "42"},
+            {"name": "ফজর", "name_key": "fajr", "time_key": "fajr_time"},
+            {"name": "যুহর", "name_key": "johor", "time_key": "johor_time"},
+            {"name": "আসর", "name_key": "asr", "time_key": "asr_time"},
+            {"name": "মাগরিব", "name_key": "maghrib", "time_key": "maghrib_time"},
+            {"name": "ইশা", "name_key": "isha", "time_key": "isha_time"},
+            {"name": "সূর্যোদয়", "name_key": "sunrise", "time_key": "sunrise_time"},
+            {"name": "দুপুর", "name_key": "midday", "time_key": "midday_time"},
+            {"name": "সূর্যাস্ত", "name_key": "sunset", "time_key": "sunset_time"},
         ]
 
-        # ওয়াক্তগুলোর নাম খুঁজে তার সাপেক্ষে ডাইনামিক্যালি আপনার স্যাম্পল কি (Key) বসানো
         for target in prayer_targets:
             for idx, t in enumerate(texts):
                 if t == target["name"]:
-                    # ওয়াক্তের নাম যুক্ত করা
-                    extracted_list.append({target["pos_key"]: t})
+                    # ওয়াক্তের নাম যুক্ত করা
+                    extracted_list.append({target["name_key"]: t})
                     
-                    # ওয়াক্তের সময় খুঁজে বের করা (নামের পর প্রথম যে টেক্সটে সময়সূচী বা '০৩:৪৭' এর মতো ক্লোন থাকবে)
+                    # ওয়াক্তের সময় খুঁজে বের করা
                     for time_idx in range(idx + 1, min(idx + 5, len(texts))):
                         if ":" in texts[time_idx]:
                             extracted_list.append({target["time_key"]: texts[time_idx]})
                             break
                     break
 
-        # ৪. নফল নামাযের সময়সূচী (তাহাজ্জুদ, ইশরাক, চাশত)
-        # তাহাজ্জুদ ও সাহরী(শেষ) জোড়া লাগানো (যা আপনার স্যাম্পলে "51+52")
+        # ৪. নফল নামায ও সাহরীর সময়সূচী
         tahajjud_idx = -1
         for idx, t in enumerate(texts):
             if t == "তাহাজ্জুদ":
@@ -81,29 +76,28 @@ class DynamicTextExtractor(HTMLParser):
         if tahajjud_idx != -1 and tahajjud_idx + 1 < len(texts):
             if "সাহরী" in texts[tahajjud_idx+1]:
                 combined_tahajjud = f"{texts[tahajjud_idx]} {texts[tahajjud_idx+1]}".strip()
-                extracted_list.append({"51+52": combined_tahajjud})
+                extracted_list.append({"tahajjud_sehri": combined_tahajjud})
                 
-                # তাহাজ্জুদের সময় ("53")
                 if tahajjud_idx + 2 < len(texts) and ":" in texts[tahajjud_idx+2]:
-                    extracted_list.append({"53": texts[tahajjud_idx+2]})
+                    extracted_list.append({"tahajjud_sehri_time": texts[tahajjud_idx+2]})
 
-        # ইশরাক ("54") এবং তার সময় ("56")
+        # ইশরাক
         for idx, t in enumerate(texts):
             if t == "ইশরাক":
-                extracted_list.append({"54": t})
+                extracted_list.append({"ishrak": t})
                 for time_idx in range(idx + 1, min(idx + 4, len(texts))):
                     if ":" in texts[time_idx]:
-                        extracted_list.append({"56": texts[time_idx]})
+                        extracted_list.append({"ishrak_time": texts[time_idx]})
                         break
                 break
 
-        # চাশত ("57") এবং তার সময় ("59")
+        # চাশত
         for idx, t in enumerate(texts):
             if t == "চাশত":
-                extracted_list.append({"57": t})
+                extracted_list.append({"chasht": t})
                 for time_idx in range(idx + 1, min(idx + 4, len(texts))):
                     if ":" in texts[time_idx]:
-                        extracted_list.append({"59": texts[time_idx]})
+                        extracted_list.append({"chasht_time": texts[time_idx]})
                         break
                 break
 
@@ -166,4 +160,4 @@ if __name__ == "__main__":
                 json.dump(data, json_file, ensure_ascii=False, indent=4)
             time.sleep(0.5)
                 
-    print("আপনার দেওয়া স্যাম্পল স্ট্রাকচার অনুযায়ী সব ডেটা ডাইনামিক্যালি আপডেট হয়েছে!")
+    print("সব দেশের নির্দিষ্ট ডেটা টেক্সট ফরম্যাট কি (Key) অনুযায়ী আপডেট হয়েছে!")
