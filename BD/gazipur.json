@@ -3,13 +3,13 @@
         "hijri_date": "৬ মুহাররম, ১৪৪৮ হিজরি"
     },
     {
-        "bangla_date": "রবিবার, ৭ আষাঢ়, ১৪৩৩ বঙ্গাব্দ"
+        "bangla_date": "সোমবার, ৮ আষাঢ়, ১৪৩৩ বঙ্গাব্দ"
     },
     {
         "fajr": "ফজর"
     },
     {
-        "fajr_time": "০৩:৪৩ - ০৫:১০"
+        "fajr_time": "০৩:৪৪ - ০৫:১১"
     },
     {
         "johor": "যুহর"
@@ -39,7 +39,7 @@
         "sunrise": "সূর্যোদয়"
     },
     {
-        "sunrise_time": "০৫:১১ - ০৫:২৬"
+        "sunrise_time": "০৫:১২ - ০৫:২৭"
     },
     {
         "midday": "দুপুর"
@@ -57,18 +57,18 @@
         "tahajjud_sehri": "তাহাজ্জুদ সাহরী(শেষ)"
     },
     {
-        "tahajjud_sehri_time": "০৩:৪২"
+        "tahajjud_sehri_time": "০৩:৪৩"
     },
     {
         "ishrak": "ইশরাক"
     },
     {
-        "ishrak_time": "০৫:২৭ - ১১:৫৪"
+        "ishrak_time": "০৫:২৮ - ১১:৫৪"
     },
     {
         "chasht": "চাশত"
     },
     {
-        "chasht_time": "০৫:২৭ - ১১:৫৪"
+        "chasht_time": "০৫:২৮ - ১১:৫৪"
     }
 ]
