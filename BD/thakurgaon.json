@@ -3,13 +3,13 @@
         "hijri_date": "৭ সফর, ১৪৪৮ হিজরি"
     },
     {
-        "bangla_date": "মঙ্গলবার, ৬ শ্রাবণ, ১৪৩৩ বঙ্গাব্দ"
+        "bangla_date": "বুধবার, ৭ শ্রাবণ, ১৪৩৩ বঙ্গাব্দ"
     },
     {
         "fajr": "ফজর"
     },
     {
-        "fajr_time": "০৩:৫৯ - ০৫:২৫"
+        "fajr_time": "০৪:০০ - ০৫:২৬"
     },
     {
         "johor": "যুহর"
@@ -27,19 +27,19 @@
         "maghrib": "মাগরিব"
     },
     {
-        "maghrib_time": "০৬:৫৯ - ০৮:২৫"
+        "maghrib_time": "০৬:৫৯ - ০৮:২৪"
     },
     {
         "isha": "ইশা"
     },
     {
-        "isha_time": "০৮:২৬ - ০৩:৫৯"
+        "isha_time": "০৮:২৫ - ০৩:৫৯"
     },
     {
         "sunrise": "সূর্যোদয়"
     },
     {
-        "sunrise_time": "০৫:২৬ - ০৫:৪১"
+        "sunrise_time": "০৫:২৭ - ০৫:৪২"
     },
     {
         "midday": "দুপুর"
@@ -57,18 +57,18 @@
         "tahajjud_sehri": "তাহাজ্জুদ সাহরী(শেষ)"
     },
     {
-        "tahajjud_sehri_time": "০৩:৫৮"
+        "tahajjud_sehri_time": "০৩:৫৯"
     },
     {
         "ishrak": "ইশরাক"
     },
     {
-        "ishrak_time": "০৫:৪২ - ১২:০৭"
+        "ishrak_time": "০৫:৪৩ - ১২:০৭"
     },
     {
         "chasht": "চাশত"
     },
     {
-        "chasht_time": "০৫:৪২ - ১২:০৭"
+        "chasht_time": "০৫:৪৩ - ১২:০৭"
     }
 ]
