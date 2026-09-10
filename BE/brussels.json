@@ -3,43 +3,43 @@
         "hijri_date": "২৮ রবিউল আউয়াল, ১৪৪৮ হিজরি"
     },
     {
-        "bangla_date": "বুধবার, ২৫ ভাদ্র, ১৪৩৩ বঙ্গাব্দ"
+        "bangla_date": "বৃহস্পতিবার, ২৬ ভাদ্র, ১৪৩৩ বঙ্গাব্দ"
     },
     {
         "fajr": "ফজর"
     },
     {
-        "fajr_time": "০৫:১১ - ০৭:০৭"
+        "fajr_time": "০৫:১৩ - ০৭:০৯"
     },
     {
         "johor": "যুহর"
     },
     {
-        "johor_time": "০১:৪১ - ০৬:০৭"
+        "johor_time": "০১:৪১ - ০৬:০৫"
     },
     {
         "asr": "আসর"
     },
     {
-        "asr_time": "০৬:০৮ - ০৮:১০"
+        "asr_time": "০৬:০৬ - ০৮:০৮"
     },
     {
         "maghrib": "মাগরিব"
     },
     {
-        "maghrib_time": "০৮:১১ - ১০:০৬"
+        "maghrib_time": "০৮:০৯ - ১০:০৪"
     },
     {
         "isha": "ইশা"
     },
     {
-        "isha_time": "১০:০৭ - ০৫:১২"
+        "isha_time": "১০:০৫ - ০৫:১৪"
     },
     {
         "sunrise": "সূর্যোদয়"
     },
     {
-        "sunrise_time": "০৭:০৮ - ০৭:২৩"
+        "sunrise_time": "০৭:১০ - ০৭:২৫"
     },
     {
         "midday": "দুপুর"
@@ -51,24 +51,24 @@
         "sunset": "সূর্যাস্ত"
     },
     {
-        "sunset_time": "০৭:৫৫ - ০৮:১০"
+        "sunset_time": "০৭:৫৩ - ০৮:০৮"
     },
     {
         "tahajjud_sehri": "তাহাজ্জুদ সাহরী(শেষ)"
     },
     {
-        "tahajjud_sehri_time": "০৫:১০"
+        "tahajjud_sehri_time": "০৫:১২"
     },
     {
         "ishrak": "ইশরাক"
     },
     {
-        "ishrak_time": "০৭:২৪ - ০১:৩৪"
+        "ishrak_time": "০৭:২৬ - ০১:৩৪"
     },
     {
         "chasht": "চাশত"
     },
     {
-        "chasht_time": "০৭:২৪ - ০১:৩৪"
+        "chasht_time": "০৭:২৬ - ০১:৩৪"
     }
 ]
